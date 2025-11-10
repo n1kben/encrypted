@@ -410,36 +410,51 @@
 
         @media (max-width: 768px) {
             body {
-                padding: 20px;
+                padding: 20px 16px;
             }
 
             header {
                 margin-bottom: 40px;
+                padding-bottom: 20px;
+            }
+
+            header a {
+                font-size: 18px;
             }
 
             .hero {
-                margin: 50px auto 70px;
+                margin: 40px auto 60px;
             }
 
             .hero h1 {
-                font-size: 48px;
-                letter-spacing: -1.5px;
+                font-size: 42px;
+                letter-spacing: -1.2px;
+                margin-bottom: 24px;
             }
 
             .hero .tagline {
                 font-size: 18px;
-                margin-bottom: 40px;
+                margin-bottom: 36px;
+                padding: 0 10px;
             }
 
             .cta-button {
                 padding: 16px 40px;
                 font-size: 16px;
+                width: 100%;
+                max-width: 320px;
+                text-align: center;
             }
 
             .checklist {
                 grid-template-columns: 1fr;
-                gap: 12px;
+                gap: 14px;
                 margin: 50px auto 30px;
+                max-width: 100%;
+            }
+
+            .checklist-item {
+                font-size: 15px;
             }
 
             .verify-section {
@@ -448,16 +463,30 @@
             }
 
             .verify-section h3 {
-                font-size: 26px;
+                font-size: 28px;
+                margin-bottom: 20px;
             }
 
             .verify-intro {
                 font-size: 16px;
+                margin-bottom: 40px;
+            }
+
+            .verify-item h4 {
+                font-size: 17px;
+                margin-bottom: 14px;
+            }
+
+            .verify-item p {
+                font-size: 14px;
+                margin-bottom: 16px;
             }
 
             .browser-bar-url {
                 font-size: 11px;
-                padding: 6px 10px;
+                padding: 8px 10px;
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
             }
 
             .code-viewer {
@@ -465,7 +494,13 @@
             }
 
             .code-viewer-content {
-                padding: 16px;
+                padding: 16px 12px;
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .code-line {
+                font-size: 11px;
             }
 
             .network-log {
@@ -474,6 +509,11 @@
 
             .network-log-toolbar {
                 padding: 10px 12px;
+            }
+
+            .network-log-table {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
             }
 
             .network-log-header {
@@ -491,19 +531,141 @@
             }
 
             .final-cta {
-                padding: 36px 28px;
+                padding: 32px 24px;
                 margin: 60px auto 80px;
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
+                gap: 28px;
             }
 
             .final-cta h3 {
-                font-size: 28px;
+                font-size: 26px;
             }
 
             .final-cta p {
                 font-size: 16px;
-                margin-bottom: 24px;
+                margin-bottom: 0;
+            }
+
+            .final-cta .cta-button {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px 12px;
+            }
+
+            header a {
+                font-size: 16px;
+            }
+
+            .hero {
+                margin: 30px auto 50px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+                letter-spacing: -1px;
+                margin-bottom: 20px;
+            }
+
+            .hero .tagline {
+                font-size: 16px;
+                margin-bottom: 32px;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 15px;
+            }
+
+            .checklist {
+                gap: 12px;
+                margin: 40px auto 24px;
+            }
+
+            .checklist-item {
+                font-size: 14px;
+            }
+
+            .checkmark {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+            }
+
+            .verify-section {
+                padding-top: 40px;
+                margin: 40px auto 50px;
+            }
+
+            .verify-section h3 {
+                font-size: 24px;
+                margin-bottom: 16px;
+            }
+
+            .verify-intro {
+                font-size: 15px;
+                margin-bottom: 32px;
+            }
+
+            .verify-grid {
+                gap: 32px;
+            }
+
+            .verify-item h4 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .verify-item p {
+                font-size: 14px;
+                margin-bottom: 14px;
+            }
+
+            .browser-bar-chrome {
+                padding: 10px 12px;
+            }
+
+            .browser-bar-url {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+
+            .code-viewer-content {
+                padding: 12px 10px;
+            }
+
+            .code-line {
+                font-size: 10px;
+            }
+
+            .network-log-header,
+            .network-log-row {
+                grid-template-columns: 100px 60px 60px 70px 50px;
+                gap: 6px;
+                padding: 8px 10px;
+                font-size: 9px;
+            }
+
+            .network-log-row {
+                font-size: 10px;
+            }
+
+            .final-cta {
+                padding: 28px 20px;
+                margin: 50px auto 60px;
+                gap: 24px;
+            }
+
+            .final-cta h3 {
+                font-size: 22px;
+            }
+
+            .final-cta p {
+                font-size: 15px;
             }
         }
     </style>
