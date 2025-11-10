@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encrypted</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+        }
+
+        header a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: opacity 0.2s;
+            font-family: 'Courier New', monospace;
+        }
+
+        header a:hover {
+            opacity: 0.7;
+        }
+
+        header a .bracket {
+            color: #666;
+        }
+
+        header a .highlight {
+            color: #fff;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 12px;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            margin-top: 32px;
+            color: #888;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        label:first-of-type {
+            margin-top: 0;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 16px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #e0e0e0;
+            transition: border-color 0.2s;
+        }
+
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #fff;
+        }
+
+        input[type="password"]::placeholder {
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 16px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            transition: border-color 0.2s;
+            line-height: 1.6;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #fff;
+        }
+
+        textarea::placeholder {
+            color: #555;
+        }
+
+        .decrypted-content {
+            padding: 20px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-break: break-word;
+            min-height: 200px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px 24px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:active {
+            opacity: 0.7;
+        }
+
+        .info {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #222;
+            color: #555;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .hero {
+            max-width: 700px;
+            margin: 60px auto 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .hero .tagline {
+            font-size: 20px;
+            color: #888;
+            margin-bottom: 60px;
+            line-height: 1.5;
+        }
+
+        .features {
+            max-width: 700px;
+            margin: 0 auto 60px;
+            display: grid;
+            gap: 32px;
+        }
+
+        .feature {
+            text-align: left;
+        }
+
+        .feature h3 {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .feature p {
+            color: #888;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 40px;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            border: none;
+        }
+
+        .cta-button:hover {
+            opacity: 0.9;
+        }
+
+        .verify-section {
+            max-width: 700px;
+            margin: 60px auto;
+            padding: 32px;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .verify-section h3 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .verify-section p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .verify-steps {
+            text-align: left;
+            margin-top: 24px;
+        }
+
+        .verify-step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            align-items: start;
+        }
+
+        .verify-step-number {
+            background: #222;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .verify-step-content {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.6;
+            padding-top: 4px;
+        }
+
+        .form-section {
+            max-width: 700px;
+            margin: 80px auto;
+            padding-top: 40px;
+        }
+
+        .form-section h2 {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-section .subtitle {
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+            }
+
+            header {
+                margin-bottom: 32px;
+            }
+
+            .hero {
+                margin: 40px auto 60px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero .tagline {
+                font-size: 16px;
+                margin-bottom: 40px;
+            }
+
+            .verify-section {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" id="homeLink">en<span class="bracket">[</span><span class="highlight">crypt</span><span class="bracket">]</span>ed</a>
+    </header>
+
+    <div class="container">
+        <div id="encryptMode">
+            <div class="hero">
+                <h1>Share secrets.<br>Zero trust required.</h1>
+                <p class="tagline">
+                    Military-grade encryption that happens entirely in your browser.
+                    No servers. No databases. No data collection.
+                    Just math you can verify.
+                </p>
+                <button class="cta-button" id="ctaBtn">Create encrypted message</button>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <h3>Client-side encryption</h3>
+                    <p>
+                        Your message is encrypted using AES-GCM with 256-bit keys before it ever leaves your device.
+                        The encryption happens in JavaScript, right in your browser. No backend. No API calls. No trust needed.
+                    </p>
+                </div>
+
+                <div class="feature">
+                    <h3>No servers involved</h3>
+                    <p>
+                        The encrypted content lives in the URL hash (#). Browsers never send the hash fragment to servers—it's part of the web standard.
+                        Open your Network tab and watch: zero requests. Your secrets stay in your browser.
+                    </p>
+                </div>
+
+                <div class="feature">
+                    <h3>Password-derived keys</h3>
+                    <p>
+                        Keys are derived from your password using PBKDF2 with 100,000 iterations.
+                        Even if someone intercepts the encrypted URL, they can't decrypt it without your password.
+                        Brute-force attacks are computationally expensive by design.
+                    </p>
+                </div>
+
+                <div class="feature">
+                    <h3>Open source & auditable</h3>
+                    <p>
+                        View the source code. No obfuscation, no minification, no tricks.
+                        Every line of encryption code is visible. You don't have to trust us—you can verify the security yourself.
+                    </p>
+                </div>
+            </div>
+
+            <div class="verify-section">
+                <h3>Don't trust. Verify.</h3>
+                <p>
+                    Anyone can claim they're secure. We give you the tools to prove it.
+                </p>
+                <div class="verify-steps">
+                    <div class="verify-step">
+                        <div class="verify-step-number">1</div>
+                        <div class="verify-step-content">
+                            Open Developer Tools (F12) and go to the Network tab
+                        </div>
+                    </div>
+                    <div class="verify-step">
+                        <div class="verify-step-number">2</div>
+                        <div class="verify-step-content">
+                            Create an encrypted message with a password
+                        </div>
+                    </div>
+                    <div class="verify-step">
+                        <div class="verify-step-number">3</div>
+                        <div class="verify-step-content">
+                            Watch the Network tab: zero requests. Nothing sent. Nothing logged.
+                        </div>
+                    </div>
+                    <div class="verify-step">
+                        <div class="verify-step-number">4</div>
+                        <div class="verify-step-content">
+                            Share the URL and decrypt it: still zero requests. Pure client-side.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="create" class="form-section">
+                <h2>Create message</h2>
+                <p class="subtitle">
+                    Your message will be encrypted locally and stored in a shareable URL.
+                </p>
+
+                <label for="content">Message</label>
+                <textarea
+                    id="content"
+                    placeholder="Your message here..."
+                ></textarea>
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password"
+                    autocomplete="off"
+                >
+
+                <button id="encryptBtn">Encrypt</button>
+
+                <div class="info">
+                    The encrypted content is stored in the URL hash (#). The hash never leaves your browser—it's completely client-side.
+                </div>
+            </div>
+        </div>
+
+        <div id="decryptMode" style="display: none;">
+            <h1>Decrypt message</h1>
+            <p class="subtitle">
+                This URL contains an encrypted message. Enter the password to decrypt it.
+            </p>
+
+            <label for="decryptPassword">Password</label>
+            <input
+                type="password"
+                id="decryptPassword"
+                placeholder="Enter password"
+                autocomplete="off"
+            >
+
+            <button id="decryptBtn">Decrypt</button>
+
+            <div id="decryptedContent" style="display: none;">
+                <label>Decrypted Message</label>
+                <div class="decrypted-content" id="decryptedText"></div>
+            </div>
+
+            <div class="info">
+                All decryption happens in your browser. No data is transmitted—verify by checking the Network tab (F12).
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elements
+        const homeLink = document.getElementById('homeLink');
+        const encryptMode = document.getElementById('encryptMode');
+        const decryptMode = document.getElementById('decryptMode');
+        const ctaBtn = document.getElementById('ctaBtn');
+        const createSection = document.getElementById('create');
+
+        // Encrypt mode elements
+        const passwordInput = document.getElementById('password');
+        const contentTextarea = document.getElementById('content');
+        const encryptBtn = document.getElementById('encryptBtn');
+
+        // Decrypt mode elements
+        const decryptPassword = document.getElementById('decryptPassword');
+        const decryptBtn = document.getElementById('decryptBtn');
+        const decryptedContent = document.getElementById('decryptedContent');
+        const decryptedText = document.getElementById('decryptedText');
+
+        // Convert string to ArrayBuffer
+        function str2ab(str) {
+            const encoder = new TextEncoder();
+            return encoder.encode(str);
+        }
+
+        // Convert ArrayBuffer to string
+        function ab2str(buffer) {
+            const decoder = new TextDecoder();
+            return decoder.decode(buffer);
+        }
+
+        // Convert ArrayBuffer to base64
+        function ab2base64(buffer) {
+            return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+        }
+
+        // Convert base64 to ArrayBuffer
+        function base642ab(base64) {
+            const binary = atob(base64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        // Derive encryption key from password
+        async function deriveKey(password, salt) {
+            const passwordKey = await crypto.subtle.importKey(
+                'raw',
+                str2ab(password),
+                'PBKDF2',
+                false,
+                ['deriveKey']
+            );
+
+            return crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: salt,
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                passwordKey,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }
+
+        // Encrypt content
+        async function encrypt(text, password) {
+            if (!password || !text) return null;
+
+            try {
+                const salt = crypto.getRandomValues(new Uint8Array(16));
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const key = await deriveKey(password, salt);
+
+                const encrypted = await crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    str2ab(text)
+                );
+
+                // Combine salt + iv + encrypted data
+                const combined = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+                combined.set(salt, 0);
+                combined.set(iv, salt.length);
+                combined.set(new Uint8Array(encrypted), salt.length + iv.length);
+
+                return ab2base64(combined.buffer);
+            } catch (error) {
+                console.error('Encryption error:', error);
+                return null;
+            }
+        }
+
+        // Decrypt content
+        async function decrypt(encryptedData, password) {
+            if (!password || !encryptedData) return null;
+
+            try {
+                const combined = new Uint8Array(base642ab(encryptedData));
+
+                const salt = combined.slice(0, 16);
+                const iv = combined.slice(16, 28);
+                const encrypted = combined.slice(28);
+
+                const key = await deriveKey(password, salt);
+
+                const decrypted = await crypto.subtle.decrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    encrypted
+                );
+
+                return ab2str(decrypted);
+            } catch (error) {
+                console.error('Decryption error:', error);
+                return null;
+            }
+        }
+
+        // Determine which mode to show
+        function updateMode() {
+            const hasHash = window.location.hash.length > 1;
+
+            if (hasHash) {
+                // Decrypt mode
+                encryptMode.style.display = 'none';
+                decryptMode.style.display = 'block';
+                decryptedContent.style.display = 'none';
+                decryptPassword.value = '';
+                decryptedText.textContent = '';
+            } else {
+                // Encrypt mode
+                encryptMode.style.display = 'block';
+                decryptMode.style.display = 'none';
+                passwordInput.value = '';
+                contentTextarea.value = '';
+            }
+        }
+
+        // Event listeners
+        encryptBtn.addEventListener('click', async () => {
+            const password = passwordInput.value;
+            const content = contentTextarea.value;
+
+            if (!password || !content) {
+                return;
+            }
+
+            const encrypted = await encrypt(content, password);
+            if (encrypted) {
+                window.location.hash = encrypted;
+            }
+        });
+
+        decryptBtn.addEventListener('click', async () => {
+            const hash = window.location.hash.slice(1);
+            const password = decryptPassword.value;
+
+            if (!password) {
+                return;
+            }
+
+            const decrypted = await decrypt(hash, password);
+            if (decrypted) {
+                decryptedText.textContent = decrypted;
+                decryptedContent.style.display = 'block';
+            }
+        });
+
+        // Home link
+        homeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.hash = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // CTA button scroll to create section
+        if (ctaBtn) {
+            ctaBtn.addEventListener('click', () => {
+                createSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // Handle Enter key for password inputs
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                encryptBtn.click();
+            }
+        });
+
+        decryptPassword.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                decryptBtn.click();
+            }
+        });
+
+        // Initialize mode on load
+        window.addEventListener('load', updateMode);
+        window.addEventListener('hashchange', updateMode);
+    </script>
+</body>
+</html>
