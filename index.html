@@ -294,6 +294,11 @@
             padding-top: 4px;
         }
 
+        .verify-step-content strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
         .form-section {
             max-width: 700px;
             margin: 80px auto;
@@ -350,44 +355,45 @@
             <div class="hero">
                 <h1>Share secrets.<br>Zero trust required.</h1>
                 <p class="tagline">
-                    Military-grade encryption that happens entirely in your browser.
-                    No servers. No databases. No data collection.
-                    Just math you can verify.
+                    A single HTML file. Zero network requests. Zero dependencies.
+                    Everything encrypted client-side. Everything verifiable.
                 </p>
                 <button class="cta-button" id="ctaBtn">Create encrypted message</button>
             </div>
 
             <div class="features">
                 <div class="feature">
-                    <h3>Client-side encryption</h3>
+                    <h3>Zero network requests. Provably.</h3>
                     <p>
-                        Your message is encrypted using AES-GCM with 256-bit keys before it ever leaves your device.
-                        The encryption happens in JavaScript, right in your browser. No backend. No API calls. No trust needed.
+                        Open your browser's Network tab (F12) right now. Create a message. Encrypt it. Decrypt it.
+                        Watch the network log: absolutely nothing. No analytics. No telemetry. No tracking. No requests.
+                        You don't have to trust us—you can verify it yourself in 10 seconds.
                     </p>
                 </div>
 
                 <div class="feature">
-                    <h3>No servers involved</h3>
+                    <h3>Single HTML file. No dependencies.</h3>
                     <p>
-                        The encrypted content lives in the URL hash (#). Browsers never send the hash fragment to servers—it's part of the web standard.
-                        Open your Network tab and watch: zero requests. Your secrets stay in your browser.
+                        This entire app is one HTML file. No JavaScript libraries. No frameworks. No CDN requests. No fonts loaded. No external resources.
+                        View source—it's all there. Copy it, audit it, run it offline. The Network tab proves it: one file, zero dependencies.
                     </p>
                 </div>
 
                 <div class="feature">
-                    <h3>Password-derived keys</h3>
+                    <h3>Client-side encryption only</h3>
                     <p>
-                        Keys are derived from your password using PBKDF2 with 100,000 iterations.
-                        Even if someone intercepts the encrypted URL, they can't decrypt it without your password.
-                        Brute-force attacks are computationally expensive by design.
+                        Your message is encrypted using AES-GCM with 256-bit keys using the Web Crypto API, right in your browser.
+                        The encrypted content lives in the URL hash (#), which browsers never send to servers—it's part of the web standard.
+                        No backend. No API. No servers. Just cryptography.
                     </p>
                 </div>
 
                 <div class="feature">
                     <h3>Open source & auditable</h3>
                     <p>
-                        View the source code. No obfuscation, no minification, no tricks.
-                        Every line of encryption code is visible. You don't have to trust us—you can verify the security yourself.
+                        View the source code—all 500 lines. No obfuscation, no minification, no tricks.
+                        Password-derived keys via PBKDF2 with 100,000 iterations. Every line of encryption code is visible.
+                        You can audit the security yourself.
                     </p>
                 </div>
             </div>
@@ -395,31 +401,32 @@
             <div class="verify-section">
                 <h3>Don't trust. Verify.</h3>
                 <p>
-                    Anyone can claim they're secure. We give you the tools to prove it.
+                    Anyone can claim they're secure. We make bold claims: zero network requests, zero dependencies.
+                    But you don't have to believe us. Here's how to verify every claim in under 60 seconds:
                 </p>
                 <div class="verify-steps">
                     <div class="verify-step">
                         <div class="verify-step-number">1</div>
                         <div class="verify-step-content">
-                            Open Developer Tools (F12) and go to the Network tab
+                            <strong>Verify zero dependencies:</strong> Open Developer Tools (F12) → Network tab. Refresh the page. Count the requests: just this one HTML file. No JavaScript libraries, no CSS frameworks, no Google Fonts, nothing.
                         </div>
                     </div>
                     <div class="verify-step">
                         <div class="verify-step-number">2</div>
                         <div class="verify-step-content">
-                            Create an encrypted message with a password
+                            <strong>Verify zero requests on encrypt:</strong> Clear the Network tab. Type a message, enter a password, click Encrypt. Watch the log: zero new requests. The URL changes but nothing leaves your browser.
                         </div>
                     </div>
                     <div class="verify-step">
                         <div class="verify-step-number">3</div>
                         <div class="verify-step-content">
-                            Watch the Network tab: zero requests. Nothing sent. Nothing logged.
+                            <strong>Verify zero requests on decrypt:</strong> Copy the URL. Open it in a new tab. Clear the Network tab again. Enter the password and decrypt. Still zero requests. Pure client-side.
                         </div>
                     </div>
                     <div class="verify-step">
                         <div class="verify-step-number">4</div>
                         <div class="verify-step-content">
-                            Share the URL and decrypt it: still zero requests. Pure client-side.
+                            <strong>Verify the code:</strong> View source (Ctrl+U). Read the encryption code. It's all there—no minification, no obfuscation. Audit it yourself or ask an AI to explain it.
                         </div>
                     </div>
                 </div>
