@@ -317,6 +317,36 @@
             margin-bottom: 32px;
         }
 
+        .url-length-warning {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .url-length-warning.warning {
+            background: #2a2a1a;
+            border: 1px solid #3a3a2a;
+            color: #ff7;
+            display: block;
+        }
+
+        .url-length-warning.error {
+            background: #2a1a1a;
+            border: 1px solid #3a2a2a;
+            color: #f88;
+            display: block;
+        }
+
+        .url-length-warning.info {
+            background: #1a1a2a;
+            border: 1px solid #2a2a3a;
+            color: #88f;
+            display: block;
+        }
+
         .decrypt-error {
             margin-top: 20px;
             padding: 16px;
@@ -462,6 +492,8 @@
                     autocomplete="off"
                 >
 
+                <div id="urlLengthWarning" class="url-length-warning"></div>
+
                 <button id="encryptBtn">Encrypt</button>
 
                 <div class="info">
@@ -515,6 +547,7 @@
         const passwordInput = document.getElementById('password');
         const contentTextarea = document.getElementById('content');
         const encryptBtn = document.getElementById('encryptBtn');
+        const urlLengthWarning = document.getElementById('urlLengthWarning');
 
         // Decrypt mode elements
         const decryptForm = document.getElementById('decryptForm');
@@ -629,6 +662,58 @@
             }
         }
 
+        // Browser URL limits (in characters)
+        const URL_LIMITS = {
+            edge: 2083,
+            chrome: 32779,
+            firefox: 65536,
+            safari: 80000
+        };
+
+        // Calculate estimated encrypted URL length
+        function estimateEncryptedLength(text) {
+            if (!text) return 0;
+
+            // Base URL (current location without hash)
+            const baseUrl = window.location.href.split('#')[0];
+
+            // Encrypted data size:
+            // - Salt: 16 bytes
+            // - IV: 12 bytes
+            // - Encrypted message: same size as input (UTF-8 encoded)
+            // - Base64 encoding adds ~33% overhead
+            const textBytes = new TextEncoder().encode(text).length;
+            const encryptedBytes = 16 + 12 + textBytes;
+            const base64Length = Math.ceil(encryptedBytes * 4 / 3);
+
+            // Total URL length
+            return baseUrl.length + 1 + base64Length; // +1 for '#'
+        }
+
+        // Check URL length and show warnings
+        function checkUrlLength() {
+            const text = contentTextarea.value;
+
+            if (!text) {
+                urlLengthWarning.className = 'url-length-warning';
+                urlLengthWarning.textContent = '';
+                return;
+            }
+
+            const estimatedLength = estimateEncryptedLength(text);
+
+            if (estimatedLength > URL_LIMITS.chrome) {
+                urlLengthWarning.className = 'url-length-warning error';
+                urlLengthWarning.textContent = `⚠️ Message too long. Encrypted URL will be ~${estimatedLength.toLocaleString()} characters. Won't work in Chrome (limit: ${URL_LIMITS.chrome.toLocaleString()}), Firefox, or Safari.`;
+            } else if (estimatedLength > URL_LIMITS.edge) {
+                urlLengthWarning.className = 'url-length-warning warning';
+                urlLengthWarning.textContent = `⚠️ Encrypted URL will be ~${estimatedLength.toLocaleString()} characters. Won't work in Microsoft Edge or Internet Explorer (limit: ${URL_LIMITS.edge.toLocaleString()}). Works in Chrome, Firefox, and Safari.`;
+            } else {
+                urlLengthWarning.className = 'url-length-warning';
+                urlLengthWarning.textContent = '';
+            }
+        }
+
         // Determine which mode to show
         function updateMode() {
             const hasHash = window.location.hash.length > 1;
@@ -702,6 +787,9 @@
                 createSection.scrollIntoView({ behavior: 'smooth' });
             });
         }
+
+        // Check URL length as user types
+        contentTextarea.addEventListener('input', checkUrlLength);
 
         // Handle Enter key for password inputs
         passwordInput.addEventListener('keypress', (e) => {
