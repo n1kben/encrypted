@@ -317,6 +317,16 @@
             margin-bottom: 32px;
         }
 
+        .decrypt-error {
+            margin-top: 20px;
+            padding: 16px;
+            background: #2a1a1a;
+            border: 1px solid #3a2a2a;
+            border-radius: 4px;
+            color: #f88;
+            font-size: 14px;
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 16px;
@@ -466,15 +476,21 @@
                 This URL contains an encrypted message. Enter the password to decrypt it.
             </p>
 
-            <label for="decryptPassword">Password</label>
-            <input
-                type="password"
-                id="decryptPassword"
-                placeholder="Enter password"
-                autocomplete="off"
-            >
+            <div id="decryptForm">
+                <label for="decryptPassword">Password</label>
+                <input
+                    type="password"
+                    id="decryptPassword"
+                    placeholder="Enter password"
+                    autocomplete="off"
+                >
 
-            <button id="decryptBtn">Decrypt</button>
+                <button id="decryptBtn">Decrypt</button>
+
+                <div id="decryptError" class="decrypt-error" style="display: none;">
+                    Wrong password. Please try again.
+                </div>
+            </div>
 
             <div id="decryptedContent" style="display: none;">
                 <label>Decrypted Message</label>
@@ -501,8 +517,10 @@
         const encryptBtn = document.getElementById('encryptBtn');
 
         // Decrypt mode elements
+        const decryptForm = document.getElementById('decryptForm');
         const decryptPassword = document.getElementById('decryptPassword');
         const decryptBtn = document.getElementById('decryptBtn');
+        const decryptError = document.getElementById('decryptError');
         const decryptedContent = document.getElementById('decryptedContent');
         const decryptedText = document.getElementById('decryptedText');
 
@@ -619,7 +637,9 @@
                 // Decrypt mode
                 encryptMode.style.display = 'none';
                 decryptMode.style.display = 'block';
+                decryptForm.style.display = 'block';
                 decryptedContent.style.display = 'none';
+                decryptError.style.display = 'none';
                 decryptPassword.value = '';
                 decryptedText.textContent = '';
             } else {
@@ -654,10 +674,18 @@
                 return;
             }
 
+            // Hide any previous error
+            decryptError.style.display = 'none';
+
             const decrypted = await decrypt(hash, password);
             if (decrypted) {
-                decryptedText.textContent = decrypted;
+                // Success: hide form, show content
+                decryptForm.style.display = 'none';
                 decryptedContent.style.display = 'block';
+                decryptedText.textContent = decrypted;
+            } else {
+                // Failure: show error
+                decryptError.style.display = 'block';
             }
         });
 
@@ -686,6 +714,11 @@
             if (e.key === 'Enter') {
                 decryptBtn.click();
             }
+        });
+
+        // Hide error when user starts typing again
+        decryptPassword.addEventListener('input', () => {
+            decryptError.style.display = 'none';
         });
 
         // Initialize mode on load
