@@ -357,6 +357,81 @@
             font-size: 14px;
         }
 
+        .encrypted-url-container {
+            margin-top: 24px;
+            padding: 20px;
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .encrypted-url-container.show {
+            display: block;
+        }
+
+        .encrypted-url-container h3 {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .encrypted-url-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .encrypted-url-display {
+            flex: 1;
+            padding: 12px;
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #888;
+            word-break: break-all;
+            line-height: 1.6;
+        }
+
+        .url-length-badge {
+            color: #666;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .copy-url-btn {
+            padding: 12px 20px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            margin-top: 0;
+            width: auto;
+        }
+
+        .copy-url-btn:hover {
+            opacity: 0.9;
+        }
+
+        .copy-url-btn.copied {
+            background: #2a3a2a;
+            color: #7f7;
+        }
+
+        .encrypted-url-info {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 16px;
@@ -381,6 +456,14 @@
 
             .verify-section {
                 padding: 24px 20px;
+            }
+
+            .encrypted-url-box {
+                flex-direction: column;
+            }
+
+            .copy-url-btn {
+                width: 100%;
             }
         }
     </style>
@@ -496,6 +579,17 @@
 
                 <button id="encryptBtn">Encrypt</button>
 
+                <div id="encryptedUrlContainer" class="encrypted-url-container">
+                    <h3>Encrypted URL</h3>
+                    <div class="encrypted-url-box">
+                        <div class="encrypted-url-display" id="encryptedUrlDisplay"></div>
+                        <button class="copy-url-btn" id="copyUrlBtn">Copy</button>
+                    </div>
+                    <div class="encrypted-url-info">
+                        Share this URL with your recipient. They'll need the password to decrypt it.
+                    </div>
+                </div>
+
                 <div class="info">
                     The encrypted content is stored in the URL hash (#). The hash never leaves your browser—it's completely client-side.
                 </div>
@@ -548,6 +642,9 @@
         const contentTextarea = document.getElementById('content');
         const encryptBtn = document.getElementById('encryptBtn');
         const urlLengthWarning = document.getElementById('urlLengthWarning');
+        const encryptedUrlContainer = document.getElementById('encryptedUrlContainer');
+        const encryptedUrlDisplay = document.getElementById('encryptedUrlDisplay');
+        const copyUrlBtn = document.getElementById('copyUrlBtn');
 
         // Decrypt mode elements
         const decryptForm = document.getElementById('decryptForm');
@@ -733,8 +830,42 @@
                 decryptMode.style.display = 'none';
                 passwordInput.value = '';
                 contentTextarea.value = '';
+                encryptedUrlContainer.classList.remove('show');
             }
         }
+
+        // Truncate URL for display
+        function truncateUrl(url) {
+            const maxLength = 100; // Total characters to show (excluding "...")
+
+            if (url.length <= maxLength) {
+                return url;
+            }
+
+            // Split URL into base and hash
+            const parts = url.split('#');
+            const baseUrl = parts[0];
+            const hash = parts[1] || '';
+
+            // If base URL alone is too long, truncate it
+            if (baseUrl.length > maxLength - 20) {
+                return baseUrl.substring(0, maxLength - 20) + '...#' + hash.substring(0, 10) + '...' + hash.substring(hash.length - 10);
+            }
+
+            // Calculate how much hash to show
+            const remainingSpace = maxLength - baseUrl.length - 1; // -1 for '#'
+            const sideLength = Math.floor((remainingSpace - 3) / 2); // -3 for '...'
+
+            if (sideLength < 10) {
+                // Very short space, just show base URL and indicate there's a hash
+                return baseUrl + '#...';
+            }
+
+            return baseUrl + '#' + hash.substring(0, sideLength) + '...' + hash.substring(hash.length - sideLength);
+        }
+
+        // Store full URL for copying
+        let fullEncryptedUrl = '';
 
         // Event listeners
         encryptBtn.addEventListener('click', async () => {
@@ -747,7 +878,35 @@
 
             const encrypted = await encrypt(content, password);
             if (encrypted) {
-                window.location.hash = encrypted;
+                // Generate the encrypted URL
+                const baseUrl = window.location.href.split('#')[0];
+                fullEncryptedUrl = `${baseUrl}#${encrypted}`;
+
+                // Show truncated URL with length
+                const truncated = truncateUrl(fullEncryptedUrl);
+                encryptedUrlDisplay.innerHTML = `${truncated}<div class="url-length-badge">(${fullEncryptedUrl.length.toLocaleString()} characters)</div>`;
+                encryptedUrlContainer.classList.add('show');
+
+                // Reset copy button state
+                copyUrlBtn.textContent = 'Copy';
+                copyUrlBtn.classList.remove('copied');
+            }
+        });
+
+        // Copy URL button
+        copyUrlBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(fullEncryptedUrl);
+                copyUrlBtn.textContent = 'Copied!';
+                copyUrlBtn.classList.add('copied');
+
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    copyUrlBtn.textContent = 'Copy';
+                    copyUrlBtn.classList.remove('copied');
+                }, 2000);
+            } catch (error) {
+                console.error('Failed to copy:', error);
             }
         });
 
@@ -788,8 +947,16 @@
             });
         }
 
-        // Check URL length as user types
-        contentTextarea.addEventListener('input', checkUrlLength);
+        // Check URL length as user types and hide encrypted URL
+        contentTextarea.addEventListener('input', () => {
+            checkUrlLength();
+            encryptedUrlContainer.classList.remove('show');
+        });
+
+        // Hide encrypted URL when password changes
+        passwordInput.addEventListener('input', () => {
+            encryptedUrlContainer.classList.remove('show');
+        });
 
         // Handle Enter key for password inputs
         passwordInput.addEventListener('keypress', (e) => {
