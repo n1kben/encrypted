@@ -488,8 +488,9 @@
         e.preventDefault();
 
         const text = document.getElementById("encrypt-create-text").value;
-        const password = document.getElementById("encrypt-create-password")
-          .value;
+        const password = document.getElementById(
+          "encrypt-create-password",
+        ).value;
 
         if (!text || !password) {
           alert("Please enter both a message and a password");
@@ -511,8 +512,9 @@
       async function handleDecryptSubmit(e) {
         e.preventDefault();
 
-        const password = document.getElementById("decrypt-locked-password")
-          .value;
+        const password = document.getElementById(
+          "decrypt-locked-password",
+        ).value;
         const hash = window.location.hash;
 
         if (!password) {
