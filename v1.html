@@ -332,19 +332,22 @@
 
         currentState = newState;
 
-        // Add active class to current state elements
+        // Add active class to current state elements and focus appropriate field
         switch (newState) {
           case STATES.ENCRYPT_CREATE:
             document.getElementById("encrypt").classList.add("active");
             document.getElementById("encrypt-create").classList.add("active");
+            document.getElementById("encrypt-create-text").focus();
             break;
           case STATES.ENCRYPT_SUCCESS:
             document.getElementById("encrypt").classList.add("active");
             document.getElementById("encrypt-success").classList.add("active");
+            document.getElementById("encrypt-success-copy").focus();
             break;
           case STATES.DECRYPT_LOCKED:
             document.getElementById("decrypt").classList.add("active");
             document.getElementById("decrypt-locked").classList.add("active");
+            document.getElementById("decrypt-locked-password").focus();
             break;
           case STATES.DECRYPT_UNLOCKED:
             document.getElementById("decrypt").classList.add("active");
