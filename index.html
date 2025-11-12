@@ -1,813 +1,846 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Encrypted - Share secrets. Zero trust required.</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #000;
+        color: #e0e0e0;
+        min-height: 100vh;
+        padding: 24px;
+        scroll-behavior: smooth;
+      }
+
+      header {
+        max-width: 800px;
+        margin: 0 auto 60px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #1a1a1a;
+      }
+
+      header a {
+        color: #e0e0e0;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: opacity 0.2s;
+        font-family: "Courier New", monospace;
+      }
+
+      header a:hover {
+        opacity: 0.7;
+      }
+
+      header a .bracket {
+        color: #444;
+      }
+
+      header a .highlight {
+        color: #fff;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .hero {
+        max-width: 800px;
+        margin: 80px auto 100px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 72px;
+        font-weight: 700;
+        margin-bottom: 32px;
+        letter-spacing: -2px;
+        line-height: 1.05;
+        color: #fff;
+      }
+
+      .hero .tagline {
+        font-size: 22px;
+        color: #999;
+        margin-bottom: 48px;
+        line-height: 1.6;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cta-button {
+        display: inline-block;
+        padding: 18px 48px;
+        background: #fff;
+        color: #000;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 17px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+      }
+
+      .cta-button .version-text {
+        color: #aaa;
+        font-weight: 500;
+      }
+
+      .cta-button:hover {
+        opacity: 0.9;
+      }
+
+      .checklist {
+        max-width: 600px;
+        margin: 60px auto 40px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .checklist-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #aaa;
+        font-size: 16px;
+      }
+
+      .checkmark {
+        background: #fff;
+        color: #000;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+        font-weight: bold;
+      }
+
+      .verify-section {
+        max-width: 800px;
+        margin: 80px auto 80px;
+        padding-top: 80px;
+        border-top: 1px solid #1a1a1a;
+      }
+
+      .verify-section h3 {
+        color: #fff;
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        letter-spacing: -1px;
+      }
+
+      .verify-intro {
+        color: #999;
+        font-size: 18px;
+        line-height: 1.7;
+        margin-bottom: 48px;
+        max-width: 700px;
+      }
+
+      .verify-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .verify-item h4 {
+        color: #fff;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        letter-spacing: -0.3px;
+      }
+
+      .verify-item p {
+        color: #999;
+        font-size: 15px;
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
+
+      .browser-bar {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        overflow: hidden;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      .browser-bar-chrome {
+        background: #0f0f0f;
+        border-bottom: 1px solid #333;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .browser-bar-dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .browser-bar-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #333;
+      }
+
+      .browser-bar-url {
+        flex: 1;
+        background: #0a0a0a;
+        border: 1px solid #2a2a2a;
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-family: "Courier New", monospace;
+        color: #aaa;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      .browser-bar-hash {
+        color: #e5c07b;
+      }
+
+      .code-viewer {
+        background: #0a0a0a;
+        border: 1px solid #2a2a2a;
+        border-radius: 8px;
+        overflow: hidden;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+      }
+
+      .code-viewer-header {
+        background: #0f0f0f;
+        border-bottom: 1px solid #2a2a2a;
+        padding: 12px 16px;
+        color: #888;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .code-viewer-icon {
+        font-size: 14px;
+      }
+
+      .code-viewer-content {
+        padding: 20px;
+        overflow-x: auto;
+        font-size: 0;
+      }
+
+      .code-line {
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+        font-size: 13px;
+        white-space: pre;
+      }
+
+      .code-comment {
+        color: #666;
+      }
+
+      .code-keyword {
+        color: #c678dd;
+      }
+
+      .code-function {
+        color: #61afef;
+      }
+
+      .code-string {
+        color: #98c379;
+      }
+
+      .code-method {
+        color: #e5c07b;
+      }
+
+      .code-var {
+        color: #e06c75;
+      }
+
+      .network-log {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        overflow: hidden;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 13px;
+      }
+
+      .network-log-toolbar {
+        background: #0f0f0f;
+        border-bottom: 1px solid #333;
+        padding: 12px 16px;
+        color: #888;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .network-log-toolbar-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+      }
+
+      .network-log-table {
+        overflow-x: auto;
+      }
+
+      .network-log-header {
+        display: grid;
+        grid-template-columns: 200px 80px 80px 100px 80px;
+        gap: 12px;
+        padding: 8px 16px;
+        background: #151515;
+        color: #999;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid #2a2a2a;
+      }
+
+      .network-log-row {
+        display: grid;
+        grid-template-columns: 200px 80px 80px 100px 80px;
+        gap: 12px;
+        padding: 10px 16px;
+        color: #bbb;
+        border-bottom: 1px solid #222;
+        font-size: 12px;
+        align-items: center;
+      }
+
+      .network-log-row:hover {
+        background: #1f1f1f;
+      }
+
+      .network-log-row:last-child {
+        border-bottom: none;
+      }
+
+      .network-log-name {
+        color: #5b9dd9;
+        font-family: "Courier New", monospace;
+      }
+
+      .network-log-status {
+        font-family: "Courier New", monospace;
+      }
+
+      .status-200 {
+        color: #6c6;
+      }
+
+      .status-cached {
+        color: #888;
+        font-style: italic;
+      }
+
+      .network-log-type {
+        color: #999;
+      }
+
+      .network-log-size {
+        color: #aaa;
+        font-family: "Courier New", monospace;
+      }
+
+      .network-log-time {
+        color: #888;
+        font-family: "Courier New", monospace;
+      }
+
+      .final-cta {
+        max-width: 800px;
+        margin: 80px auto 100px;
+        padding: 48px;
+        background: #0a0a0a;
+        border: 1px solid #2a2a2a;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 48px;
+      }
+
+      .final-cta-content {
+        flex: 1;
+      }
+
+      .final-cta h3 {
+        color: #fff;
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        letter-spacing: -1px;
+      }
+
+      .final-cta p {
+        color: #999;
+        font-size: 18px;
+        line-height: 1.6;
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 768px) {
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000;
-            color: #e0e0e0;
-            min-height: 100vh;
-            padding: 24px;
-            scroll-behavior: smooth;
+          padding: 20px 16px;
         }
 
         header {
-            max-width: 800px;
-            margin: 0 auto 60px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid #1a1a1a;
+          margin-bottom: 40px;
+          padding-bottom: 20px;
         }
 
         header a {
-            color: #e0e0e0;
-            text-decoration: none;
-            font-size: 20px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            transition: opacity 0.2s;
-            font-family: 'Courier New', monospace;
-        }
-
-        header a:hover {
-            opacity: 0.7;
-        }
-
-        header a .bracket {
-            color: #444;
-        }
-
-        header a .highlight {
-            color: #fff;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+          font-size: 18px;
         }
 
         .hero {
-            max-width: 800px;
-            margin: 80px auto 100px;
-            text-align: center;
+          margin: 40px auto 60px;
         }
 
         .hero h1 {
-            font-size: 72px;
-            font-weight: 700;
-            margin-bottom: 32px;
-            letter-spacing: -2px;
-            line-height: 1.05;
-            color: #fff;
+          font-size: 42px;
+          letter-spacing: -1.2px;
+          margin-bottom: 24px;
         }
 
         .hero .tagline {
-            font-size: 22px;
-            color: #999;
-            margin-bottom: 48px;
-            line-height: 1.6;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+          font-size: 18px;
+          margin-bottom: 36px;
+          padding: 0 10px;
         }
 
         .cta-button {
-            display: inline-block;
-            padding: 18px 48px;
-            background: #fff;
-            color: #000;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-        }
-
-        .cta-button:hover {
-            opacity: 0.9;
+          padding: 16px 40px;
+          font-size: 16px;
+          text-align: center;
         }
 
         .checklist {
-            max-width: 600px;
-            margin: 60px auto 40px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+          grid-template-columns: 1fr;
+          gap: 14px;
+          margin: 50px auto 30px;
+          max-width: 100%;
         }
 
         .checklist-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #aaa;
-            font-size: 16px;
-        }
-
-        .checkmark {
-            background: #fff;
-            color: #000;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
-            font-weight: bold;
+          font-size: 15px;
         }
 
         .verify-section {
-            max-width: 800px;
-            margin: 80px auto 80px;
-            padding-top: 80px;
-            border-top: 1px solid #1a1a1a;
+          padding-top: 50px;
+          margin: 50px auto 60px;
         }
 
         .verify-section h3 {
-            color: #fff;
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            letter-spacing: -1px;
+          font-size: 28px;
+          margin-bottom: 20px;
         }
 
         .verify-intro {
-            color: #999;
-            font-size: 18px;
-            line-height: 1.7;
-            margin-bottom: 48px;
-            max-width: 700px;
-        }
-
-        .verify-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
+          font-size: 16px;
+          margin-bottom: 40px;
         }
 
         .verify-item h4 {
-            color: #fff;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            letter-spacing: -0.3px;
+          font-size: 17px;
+          margin-bottom: 14px;
         }
 
         .verify-item p {
-            color: #999;
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        .browser-bar {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        .browser-bar-chrome {
-            background: #0f0f0f;
-            border-bottom: 1px solid #333;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .browser-bar-dots {
-            display: flex;
-            gap: 6px;
-        }
-
-        .browser-bar-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #333;
+          font-size: 14px;
+          margin-bottom: 16px;
         }
 
         .browser-bar-url {
-            flex: 1;
-            background: #0a0a0a;
-            border: 1px solid #2a2a2a;
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-size: 13px;
-            font-family: 'Courier New', monospace;
-            color: #aaa;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-
-        .browser-bar-hash {
-            color: #e5c07b;
+          font-size: 11px;
+          padding: 8px 10px;
+          overflow-x: scroll;
+          -webkit-overflow-scrolling: touch;
         }
 
         .code-viewer {
-            background: #0a0a0a;
-            border: 1px solid #2a2a2a;
-            border-radius: 8px;
-            overflow: hidden;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-        }
-
-        .code-viewer-header {
-            background: #0f0f0f;
-            border-bottom: 1px solid #2a2a2a;
-            padding: 12px 16px;
-            color: #888;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .code-viewer-icon {
-            font-size: 14px;
+          font-size: 11px;
         }
 
         .code-viewer-content {
-            padding: 20px;
-            overflow-x: auto;
-            font-size: 0;
+          padding: 16px 12px;
+          overflow-x: scroll;
+          -webkit-overflow-scrolling: touch;
         }
 
         .code-line {
-            line-height: 1.5;
-            margin: 0;
-            padding: 0;
-            font-size: 13px;
-            white-space: pre;
-        }
-
-        .code-comment {
-            color: #666;
-        }
-
-        .code-keyword {
-            color: #c678dd;
-        }
-
-        .code-function {
-            color: #61afef;
-        }
-
-        .code-string {
-            color: #98c379;
-        }
-
-        .code-method {
-            color: #e5c07b;
-        }
-
-        .code-var {
-            color: #e06c75;
+          font-size: 11px;
         }
 
         .network-log {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-size: 13px;
+          font-size: 11px;
         }
 
         .network-log-toolbar {
-            background: #0f0f0f;
-            border-bottom: 1px solid #333;
-            padding: 12px 16px;
-            color: #888;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .network-log-toolbar-icon {
-            width: 16px;
-            height: 16px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
+          padding: 10px 12px;
         }
 
         .network-log-table {
-            overflow-x: auto;
+          overflow-x: scroll;
+          -webkit-overflow-scrolling: touch;
         }
 
         .network-log-header {
-            display: grid;
-            grid-template-columns: 200px 80px 80px 100px 80px;
-            gap: 12px;
-            padding: 8px 16px;
-            background: #151515;
-            color: #999;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #2a2a2a;
+          grid-template-columns: 140px 70px 70px 80px 60px;
+          gap: 8px;
+          padding: 8px 12px;
+          font-size: 10px;
         }
 
         .network-log-row {
-            display: grid;
-            grid-template-columns: 200px 80px 80px 100px 80px;
-            gap: 12px;
-            padding: 10px 16px;
-            color: #bbb;
-            border-bottom: 1px solid #222;
-            font-size: 12px;
-            align-items: center;
-        }
-
-        .network-log-row:hover {
-            background: #1f1f1f;
-        }
-
-        .network-log-row:last-child {
-            border-bottom: none;
-        }
-
-        .network-log-name {
-            color: #5b9dd9;
-            font-family: 'Courier New', monospace;
-        }
-
-        .network-log-status {
-            font-family: 'Courier New', monospace;
-        }
-
-        .status-200 {
-            color: #6c6;
-        }
-
-        .status-cached {
-            color: #888;
-            font-style: italic;
-        }
-
-        .network-log-type {
-            color: #999;
-        }
-
-        .network-log-size {
-            color: #aaa;
-            font-family: 'Courier New', monospace;
-        }
-
-        .network-log-time {
-            color: #888;
-            font-family: 'Courier New', monospace;
+          grid-template-columns: 140px 70px 70px 80px 60px;
+          gap: 8px;
+          padding: 8px 12px;
+          font-size: 11px;
         }
 
         .final-cta {
-            max-width: 800px;
-            margin: 80px auto 100px;
-            padding: 48px;
-            background: #0a0a0a;
-            border: 1px solid #2a2a2a;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 48px;
-        }
-
-        .final-cta-content {
-            flex: 1;
+          padding: 32px 24px;
+          margin: 60px auto 80px;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 28px;
         }
 
         .final-cta h3 {
-            color: #fff;
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            letter-spacing: -1px;
+          font-size: 26px;
         }
 
         .final-cta p {
-            color: #999;
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 0;
+          font-size: 16px;
+          margin-bottom: 0;
         }
 
-        @media (max-width: 768px) {
-            body {
-                padding: 20px 16px;
-            }
+        .final-cta .cta-button {
+          max-width: 100%;
+        }
+      }
 
-            header {
-                margin-bottom: 40px;
-                padding-bottom: 20px;
-            }
-
-            header a {
-                font-size: 18px;
-            }
-
-            .hero {
-                margin: 40px auto 60px;
-            }
-
-            .hero h1 {
-                font-size: 42px;
-                letter-spacing: -1.2px;
-                margin-bottom: 24px;
-            }
-
-            .hero .tagline {
-                font-size: 18px;
-                margin-bottom: 36px;
-                padding: 0 10px;
-            }
-
-            .cta-button {
-                padding: 16px 40px;
-                font-size: 16px;
-                width: 100%;
-                max-width: 320px;
-                text-align: center;
-            }
-
-            .checklist {
-                grid-template-columns: 1fr;
-                gap: 14px;
-                margin: 50px auto 30px;
-                max-width: 100%;
-            }
-
-            .checklist-item {
-                font-size: 15px;
-            }
-
-            .verify-section {
-                padding-top: 50px;
-                margin: 50px auto 60px;
-            }
-
-            .verify-section h3 {
-                font-size: 28px;
-                margin-bottom: 20px;
-            }
-
-            .verify-intro {
-                font-size: 16px;
-                margin-bottom: 40px;
-            }
-
-            .verify-item h4 {
-                font-size: 17px;
-                margin-bottom: 14px;
-            }
-
-            .verify-item p {
-                font-size: 14px;
-                margin-bottom: 16px;
-            }
-
-            .browser-bar-url {
-                font-size: 11px;
-                padding: 8px 10px;
-                overflow-x: scroll;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .code-viewer {
-                font-size: 11px;
-            }
-
-            .code-viewer-content {
-                padding: 16px 12px;
-                overflow-x: scroll;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .code-line {
-                font-size: 11px;
-            }
-
-            .network-log {
-                font-size: 11px;
-            }
-
-            .network-log-toolbar {
-                padding: 10px 12px;
-            }
-
-            .network-log-table {
-                overflow-x: scroll;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .network-log-header {
-                grid-template-columns: 140px 70px 70px 80px 60px;
-                gap: 8px;
-                padding: 8px 12px;
-                font-size: 10px;
-            }
-
-            .network-log-row {
-                grid-template-columns: 140px 70px 70px 80px 60px;
-                gap: 8px;
-                padding: 8px 12px;
-                font-size: 11px;
-            }
-
-            .final-cta {
-                padding: 32px 24px;
-                margin: 60px auto 80px;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 28px;
-            }
-
-            .final-cta h3 {
-                font-size: 26px;
-            }
-
-            .final-cta p {
-                font-size: 16px;
-                margin-bottom: 0;
-            }
-
-            .final-cta .cta-button {
-                max-width: 100%;
-            }
+      @media (max-width: 480px) {
+        body {
+          padding: 16px 12px;
         }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 16px 12px;
-            }
-
-            header a {
-                font-size: 16px;
-            }
-
-            .hero {
-                margin: 30px auto 50px;
-            }
-
-            .hero h1 {
-                font-size: 32px;
-                letter-spacing: -1px;
-                margin-bottom: 20px;
-            }
-
-            .hero .tagline {
-                font-size: 16px;
-                margin-bottom: 32px;
-            }
-
-            .cta-button {
-                padding: 14px 32px;
-                font-size: 15px;
-            }
-
-            .checklist {
-                gap: 12px;
-                margin: 40px auto 24px;
-            }
-
-            .checklist-item {
-                font-size: 14px;
-            }
-
-            .checkmark {
-                width: 20px;
-                height: 20px;
-                font-size: 12px;
-            }
-
-            .verify-section {
-                padding-top: 40px;
-                margin: 40px auto 50px;
-            }
-
-            .verify-section h3 {
-                font-size: 24px;
-                margin-bottom: 16px;
-            }
-
-            .verify-intro {
-                font-size: 15px;
-                margin-bottom: 32px;
-            }
-
-            .verify-grid {
-                gap: 32px;
-            }
-
-            .verify-item h4 {
-                font-size: 16px;
-                margin-bottom: 12px;
-            }
-
-            .verify-item p {
-                font-size: 14px;
-                margin-bottom: 14px;
-            }
-
-            .browser-bar-chrome {
-                padding: 10px 12px;
-            }
-
-            .browser-bar-url {
-                font-size: 10px;
-                padding: 6px 8px;
-            }
-
-            .code-viewer-content {
-                padding: 12px 10px;
-            }
-
-            .code-line {
-                font-size: 10px;
-            }
-
-            .network-log-header,
-            .network-log-row {
-                grid-template-columns: 100px 60px 60px 70px 50px;
-                gap: 6px;
-                padding: 8px 10px;
-                font-size: 9px;
-            }
-
-            .network-log-row {
-                font-size: 10px;
-            }
-
-            .final-cta {
-                padding: 28px 20px;
-                margin: 50px auto 60px;
-                gap: 24px;
-            }
-
-            .final-cta h3 {
-                font-size: 22px;
-            }
-
-            .final-cta p {
-                font-size: 15px;
-            }
+        header a {
+          font-size: 16px;
         }
+
+        .hero {
+          margin: 30px auto 50px;
+        }
+
+        .hero h1 {
+          font-size: 32px;
+          letter-spacing: -1px;
+          margin-bottom: 20px;
+        }
+
+        .hero .tagline {
+          font-size: 16px;
+          margin-bottom: 32px;
+        }
+
+        .cta-button {
+          padding: 14px 32px;
+          font-size: 15px;
+        }
+
+        .checklist {
+          gap: 12px;
+          margin: 40px auto 24px;
+        }
+
+        .checklist-item {
+          font-size: 14px;
+        }
+
+        .checkmark {
+          width: 20px;
+          height: 20px;
+          font-size: 12px;
+        }
+
+        .verify-section {
+          padding-top: 40px;
+          margin: 40px auto 50px;
+        }
+
+        .verify-section h3 {
+          font-size: 24px;
+          margin-bottom: 16px;
+        }
+
+        .verify-intro {
+          font-size: 15px;
+          margin-bottom: 32px;
+        }
+
+        .verify-grid {
+          gap: 32px;
+        }
+
+        .verify-item h4 {
+          font-size: 16px;
+          margin-bottom: 12px;
+        }
+
+        .verify-item p {
+          font-size: 14px;
+          margin-bottom: 14px;
+        }
+
+        .browser-bar-chrome {
+          padding: 10px 12px;
+        }
+
+        .browser-bar-url {
+          font-size: 10px;
+          padding: 6px 8px;
+        }
+
+        .code-viewer-content {
+          padding: 12px 10px;
+        }
+
+        .code-line {
+          font-size: 10px;
+        }
+
+        .network-log-header,
+        .network-log-row {
+          grid-template-columns: 100px 60px 60px 70px 50px;
+          gap: 6px;
+          padding: 8px 10px;
+          font-size: 9px;
+        }
+
+        .network-log-row {
+          font-size: 10px;
+        }
+
+        .final-cta {
+          padding: 28px 20px;
+          margin: 50px auto 60px;
+          gap: 24px;
+        }
+
+        .final-cta h3 {
+          font-size: 22px;
+        }
+
+        .final-cta p {
+          font-size: 15px;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <a href="/">en<span class="bracket">[</span><span class="highlight">crypt</span><span class="bracket">]</span>ed</a>
+      <a href="/"
+        >en<span class="bracket">[</span><span class="highlight">crypt</span
+        ><span class="bracket">]</span>ed</a
+      >
     </header>
 
     <div class="container">
-        <div class="hero">
-            <h1>Share secrets.<br>Zero trust required.</h1>
-            <p class="tagline">
-                End-to-end encrypted notes in a single HTML file. No servers. No tracking. Completely verifiable.
+      <div class="hero">
+        <h1>Share secrets.<br />Zero trust required.</h1>
+        <p class="tagline">
+          End-to-end encrypted notes in a single HTML file. No servers. No
+          tracking. Completely verifiable.
+        </p>
+        <a href="/v1.html" class="cta-button" id="cta-button-hero"
+          >Create encrypted note <span class="version-text">(v1)</span></a
+        >
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <span class="checkmark">✓</span>
+          <span>Single file, zero dependencies</span>
+        </div>
+        <div class="checklist-item">
+          <span class="checkmark">✓</span>
+          <span>Works completely offline</span>
+        </div>
+        <div class="checklist-item">
+          <span class="checkmark">✓</span>
+          <span>Open source & auditable</span>
+        </div>
+        <div class="checklist-item">
+          <span class="checkmark">✓</span>
+          <span>No tracking or analytics</span>
+        </div>
+        <div class="checklist-item">
+          <span class="checkmark">✓</span>
+          <span>Immutable once cached</span>
+        </div>
+        <div class="checklist-item">
+          <span class="checkmark">✓</span>
+          <span>Client-side encryption only</span>
+        </div>
+      </div>
+
+      <div class="verify-section">
+        <h3>Don't trust. Verify.</h3>
+        <p class="verify-intro">
+          Security through transparency. Every claim is verifiable in your
+          browser right now.
+        </p>
+
+        <div class="verify-grid">
+          <div class="verify-item">
+            <h4>Encrypted content lives in the URL hash</h4>
+            <p>
+              The URL fragment never leaves the browser—it's client-side only. Open DevTools and watch the Network tab: no request ever contains your encrypted data. The server literally cannot see it. This isn't a promise, it's how browsers work.
             </p>
-            <a href="/v1.html" class="cta-button">Create encrypted note</a>
-        </div>
+            <div class="browser-bar">
+              <div class="browser-bar-chrome">
+                <div class="browser-bar-dots">
+                  <span class="browser-bar-dot"></span>
+                  <span class="browser-bar-dot"></span>
+                  <span class="browser-bar-dot"></span>
+                </div>
+                <div class="browser-bar-url">
+                  <span id="domain-text">encrypted.com/v1.html</span
+                  ><span class="browser-bar-hash">#v1:AYJdG8xPq...</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div class="checklist">
-            <div class="checklist-item">
-                <span class="checkmark">✓</span>
-                <span>Single file, zero dependencies</span>
-            </div>
-            <div class="checklist-item">
-                <span class="checkmark">✓</span>
-                <span>Works completely offline</span>
-            </div>
-            <div class="checklist-item">
-                <span class="checkmark">✓</span>
-                <span>Open source & auditable</span>
-            </div>
-            <div class="checklist-item">
-                <span class="checkmark">✓</span>
-                <span>No tracking or analytics</span>
-            </div>
-            <div class="checklist-item">
-                <span class="checkmark">✓</span>
-                <span>Immutable once cached</span>
-            </div>
-            <div class="checklist-item">
-                <span class="checkmark">✓</span>
-                <span>Client-side encryption only</span>
-            </div>
-        </div>
-
-        <div class="verify-section">
-            <h3>Don't trust. Verify.</h3>
-            <p class="verify-intro">
-                Security through transparency. Every claim is verifiable in your browser right now.
+          <div class="verify-item">
+            <h4>Immutable after first verification</h4>
+            <p>
+              Check the Network tab: one HTTP request for the HTML file, then nothing. Cache headers are set to 10 years—every subsequent load comes from disk cache. Verify the source once, then your browser serves the identical file forever. No server can push updates. Cache-busting only happens if you manually clear it. Want absolute certainty? Download v1.html and run it locally—same code, zero network dependency. This gives you cryptographic certainty: the code you audited is the code that runs.
             </p>
-
-            <div class="verify-grid">
-                <div class="verify-item">
-                    <h4>Encrypted content lives in the URL hash</h4>
-                    <p>The hash fragment (#) is never sent to servers—it stays in your browser. Your encrypted note never touches any server.</p>
-                    <div class="browser-bar">
-                        <div class="browser-bar-chrome">
-                            <div class="browser-bar-dots">
-                                <span class="browser-bar-dot"></span>
-                                <span class="browser-bar-dot"></span>
-                                <span class="browser-bar-dot"></span>
-                            </div>
-                            <div class="browser-bar-url">
-                                <span>encrypted.com/v1.html</span><span class="browser-bar-hash">#v1:AYJdG8xPq...</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="network-log">
+              <div class="network-log-toolbar">
+                <span class="network-log-toolbar-icon">◉</span>
+                <span>Network</span>
+              </div>
+              <div class="network-log-table">
+                <div class="network-log-header">
+                  <span>Name</span>
+                  <span>Status</span>
+                  <span>Type</span>
+                  <span>Initiator</span>
+                  <span>Size</span>
                 </div>
-
-                <div class="verify-item">
-                    <h4>Zero external network requests</h4>
-                    <p>Open your browser's network tab. You'll see one file load initially, then only cached reads. Nothing else.</p>
-                    <div class="network-log">
-                        <div class="network-log-toolbar">
-                            <span class="network-log-toolbar-icon">◉</span>
-                            <span>Network</span>
-                        </div>
-                        <div class="network-log-table">
-                            <div class="network-log-header">
-                                <span>Name</span>
-                                <span>Status</span>
-                                <span>Type</span>
-                                <span>Initiator</span>
-                                <span>Size</span>
-                            </div>
-                            <div class="network-log-row">
-                                <span class="network-log-name">v1.html</span>
-                                <span class="network-log-status status-200">200</span>
-                                <span class="network-log-type">document</span>
-                                <span class="network-log-type">(index)</span>
-                                <span class="network-log-size">12.3 KB</span>
-                            </div>
-                            <div class="network-log-row">
-                                <span class="network-log-name">v1.html</span>
-                                <span class="network-log-status status-cached">(disk cache)</span>
-                                <span class="network-log-type">document</span>
-                                <span class="network-log-type">(index)</span>
-                                <span class="network-log-size">12.3 KB</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="network-log-row">
+                  <span class="network-log-name">v1.html</span>
+                  <span class="network-log-status status-200">200</span>
+                  <span class="network-log-type">document</span>
+                  <span class="network-log-type">(index)</span>
+                  <span class="network-log-size">12.3 KB</span>
                 </div>
-
-                <div class="verify-item">
-                    <h4>Web Crypto API for all encryption</h4>
-                    <p>No custom crypto, no external libraries. View source to see the implementation using browser-native encryption:</p>
-                    <div class="code-viewer">
-                        <div class="code-viewer-header">
-                            <span class="code-viewer-icon">{ }</span>
-                            <span>v1.html</span>
-                        </div>
-                        <div class="code-viewer-content">
-                            <div class="code-line"><span class="code-var">&lt;script&gt;</span></div>
-                            <div class="code-line">  <span class="code-comment">// Derive encryption key from password</span></div>
-                            <div class="code-line">  <span class="code-keyword">const</span> <span class="code-var">key</span> = <span class="code-keyword">await</span> <span class="code-function">crypto</span>.<span class="code-method">subtle</span>.<span class="code-function">deriveKey</span>(</div>
-                            <div class="code-line">    { <span class="code-var">name</span>: <span class="code-string">'PBKDF2'</span>, <span class="code-var">iterations</span>: <span class="code-string">100000</span> },</div>
-                            <div class="code-line">    <span class="code-var">baseKey</span>,</div>
-                            <div class="code-line">    { <span class="code-var">name</span>: <span class="code-string">'AES-GCM'</span>, <span class="code-var">length</span>: <span class="code-string">256</span> },</div>
-                            <div class="code-line">    <span class="code-keyword">false</span>, [<span class="code-string">'encrypt'</span>, <span class="code-string">'decrypt'</span>]</div>
-                            <div class="code-line">  );</div>
-                            <div class="code-line"></div>
-                            <div class="code-line">  <span class="code-comment">// Encrypt the message</span></div>
-                            <div class="code-line">  <span class="code-keyword">const</span> <span class="code-var">encrypted</span> = <span class="code-keyword">await</span> <span class="code-function">crypto</span>.<span class="code-method">subtle</span>.<span class="code-function">encrypt</span>(</div>
-                            <div class="code-line">    { <span class="code-var">name</span>: <span class="code-string">'AES-GCM'</span>, <span class="code-var">iv</span>: <span class="code-var">iv</span> },</div>
-                            <div class="code-line">    <span class="code-var">key</span>, <span class="code-var">data</span></div>
-                            <div class="code-line">  );</div>
-                            <div class="code-line"><span class="code-var">&lt;/script&gt;</span></div>
-                        </div>
-                    </div>
+                <div class="network-log-row">
+                  <span class="network-log-name">v1.html</span>
+                  <span class="network-log-status status-cached"
+                    >(disk cache)</span
+                  >
+                  <span class="network-log-type">document</span>
+                  <span class="network-log-type">(index)</span>
+                  <span class="network-log-size">12.3 KB</span>
                 </div>
+              </div>
             </div>
-        </div>
+          </div>
 
-        <div class="final-cta">
-            <div class="final-cta-content">
-                <h3>Try it yourself</h3>
-                <p>
-                    Everything you've seen is verifiable. Create an encrypted note and inspect the source code.
-                </p>
+          <div class="verify-item">
+            <h4>Native browser cryptography only</h4>
+            <p>
+              Zero dependencies. No bundlers, no npm packages, no custom crypto implementations. Everything uses the Web Crypto API (AES-256-GCM + PBKDF2 with 100k iterations). View source—it's all there, unminified and auditable. The entire threat model is: do you trust your browser's crypto implementation? If yes, you can trust this.
+            </p>
+            <div class="code-viewer">
+              <div class="code-viewer-header">
+                <span class="code-viewer-icon">{ }</span>
+                <span>v1.html</span>
+              </div>
+              <div class="code-viewer-content">
+                <div class="code-line"><span class="code-var">&lt;script&gt;</span></div>
+                <div class="code-line">  <span class="code-comment">// Derive encryption key from password</span></div>
+                <div class="code-line">  <span class="code-keyword">const</span> <span class="code-var">key</span> = <span class="code-keyword">await</span> <span class="code-function">crypto</span>.<span class="code-method">subtle</span>.<span class="code-function">deriveKey</span>(</div>
+                <div class="code-line">    { <span class="code-var">name</span>: <span class="code-string">'PBKDF2'</span>, <span class="code-var">iterations</span>: <span class="code-string">100000</span> },</div>
+                <div class="code-line">    <span class="code-var">baseKey</span>,</div>
+                <div class="code-line">    { <span class="code-var">name</span>: <span class="code-string">'AES-GCM'</span>, <span class="code-var">length</span>: <span class="code-string">256</span> },</div>
+                <div class="code-line">    <span class="code-keyword">false</span>, [<span class="code-string">'encrypt'</span>, <span class="code-string">'decrypt'</span>]</div>
+                <div class="code-line">  );</div>
+                <div class="code-line"></div>
+                <div class="code-line">  <span class="code-comment">// Encrypt the message</span></div>
+                <div class="code-line">  <span class="code-keyword">const</span> <span class="code-var">encrypted</span> = <span class="code-keyword">await</span> <span class="code-function">crypto</span>.<span class="code-method">subtle</span>.<span class="code-function">encrypt</span>(</div>
+                <div class="code-line">    { <span class="code-var">name</span>: <span class="code-string">'AES-GCM'</span>, <span class="code-var">iv</span>: <span class="code-var">iv</span> },</div>
+                <div class="code-line">    <span class="code-var">key</span>, <span class="code-var">data</span></div>
+                <div class="code-line">  );</div>
+                <div class="code-line"><span class="code-var">&lt;/script&gt;</span></div>
+              </div>
             </div>
-            <a href="/v1.html" class="cta-button">Create encrypted note</a>
+          </div>
         </div>
+      </div>
+
+      <div class="final-cta">
+        <div class="final-cta-content">
+          <h3>Try it yourself</h3>
+          <p>
+            Everything you've seen is verifiable. Create an encrypted note and
+            inspect the source code.
+          </p>
+        </div>
+        <a href="/v1.html" class="cta-button" id="cta-button-final"
+          >Create encrypted note <span class="version-text">(v1)</span></a
+        >
+      </div>
     </div>
-</body>
+
+    <script>
+      // Update domain in browser bar example
+      const domainText = document.getElementById("domain-text");
+      if (domainText) {
+        domainText.textContent = `${window.location.host}/v1.html`;
+      }
+    </script>
+  </body>
 </html>
