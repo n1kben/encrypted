@@ -715,7 +715,7 @@
         </div>
         <div class="checklist-item">
           <span class="checkmark">✓</span>
-          <span>Immutable once cached</span>
+          <span>Downloadable for offline use</span>
         </div>
         <div class="checklist-item">
           <span class="checkmark">✓</span>
@@ -752,9 +752,9 @@
           </div>
 
           <div class="verify-item">
-            <h4>Immutable after first verification</h4>
+            <h4>Zero network requests after page load</h4>
             <p>
-              Check the Network tab: one HTTP request for the HTML file, then nothing. Cache headers are set to 10 years—every subsequent load comes from disk cache. Verify the source once, then your browser serves the identical file forever. No server can push updates. Cache-busting only happens if you manually clear it. Want absolute certainty? Download v1.html and run it locally—same code, zero network dependency. This gives you cryptographic certainty: the code you audited is the code that runs.
+              Open the Network tab and watch: one request for v1.html, then nothing. No analytics. No external scripts. No fonts. No images. No tracking pixels. Every encryption and decryption happens locally in your browser—zero data leaves your machine. The encrypted content in the URL hash is never sent to any server. Want to guarantee this behavior never changes? Download v1.html and run it locally. The file is completely self-contained and works offline forever.
             </p>
             <div class="network-log">
               <div class="network-log-toolbar">
@@ -776,14 +776,8 @@
                   <span class="network-log-type">(index)</span>
                   <span class="network-log-size">12.3 KB</span>
                 </div>
-                <div class="network-log-row">
-                  <span class="network-log-name">v1.html</span>
-                  <span class="network-log-status status-cached"
-                    >(disk cache)</span
-                  >
-                  <span class="network-log-type">document</span>
-                  <span class="network-log-type">(index)</span>
-                  <span class="network-log-size">12.3 KB</span>
+                <div style="padding: 20px 16px; color: #666; font-style: italic; font-size: 13px;">
+                  ...crickets...
                 </div>
               </div>
             </div>
