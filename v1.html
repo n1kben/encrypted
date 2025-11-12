@@ -10,39 +10,389 @@
         padding: 0;
         box-sizing: border-box;
       }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #000;
+        color: #e0e0e0;
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      header {
+        max-width: 600px;
+        margin: 0 auto 60px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #1a1a1a;
+      }
+
+      header a {
+        color: #e0e0e0;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: opacity 0.2s;
+        font-family: "Courier New", monospace;
+      }
+
+      header a:hover {
+        opacity: 0.7;
+      }
+
+      header a .bracket {
+        color: #444;
+      }
+
+      header a .highlight {
+        color: #fff;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      #app {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* Hide sections by default - will be shown via JS */
+      #encrypt,
+      #encrypt-create,
+      #encrypt-success,
+      #decrypt,
+      #decrypt-locked,
+      #decrypt-unlocked {
+        display: none;
+      }
+
+      /* Show only the active state */
+      #encrypt.active,
+      #encrypt-create.active,
+      #encrypt-success.active,
+      #decrypt.active,
+      #decrypt-locked.active,
+      #decrypt-unlocked.active {
+        display: block;
+      }
+
+      h1 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        letter-spacing: -1px;
+        color: #fff;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 200px;
+        padding: 16px;
+        background: #0a0a0a;
+        border: 1px solid #2a2a2a;
+        border-radius: 8px;
+        color: #e0e0e0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 15px;
+        line-height: 1.6;
+        resize: vertical;
+        transition: border-color 0.2s;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: #444;
+      }
+
+      textarea::placeholder {
+        color: #666;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 14px 16px;
+        background: #0a0a0a;
+        border: 1px solid #2a2a2a;
+        border-radius: 8px;
+        color: #e0e0e0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 15px;
+        transition: border-color 0.2s;
+      }
+
+      input[type="text"]:focus,
+      input[type="password"]:focus {
+        outline: none;
+        border-color: #444;
+      }
+
+      input[type="text"]::placeholder,
+      input[type="password"]::placeholder {
+        color: #666;
+      }
+
+      input[type="text"]:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      button {
+        padding: 14px 24px;
+        background: #fff;
+        color: #000;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      button:active {
+        opacity: 0.8;
+      }
+
+      .help-text {
+        color: #999;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .success-container {
+        display: flex;
+        gap: 12px;
+      }
+
+      .success-container input {
+        flex: 1;
+      }
+
+      .success-container button {
+        flex-shrink: 0;
+      }
+
+      #decrypt-locked-error {
+        color: #ff6b6b;
+        font-size: 14px;
+        min-height: 20px;
+      }
+
+      #decrypt-unlocked-content {
+        padding: 20px;
+        background: #0a0a0a;
+        border: 1px solid #2a2a2a;
+        border-radius: 8px;
+        color: #e0e0e0;
+        font-size: 15px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 20px 16px;
+        }
+
+        header {
+          margin-bottom: 40px;
+        }
+
+        h1 {
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        textarea {
+          min-height: 150px;
+          font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+          font-size: 14px;
+          padding: 12px 14px;
+        }
+
+        button {
+          font-size: 14px;
+          padding: 12px 20px;
+        }
+      }
     </style>
   </head>
   <body>
+    <header>
+      <a href="/"
+        >en<span class="bracket">[</span><span class="highlight">crypt</span
+        ><span class="bracket">]</span>ed</a
+      >
+    </header>
+
     <div id="app">
       <div id="encrypt">
         <div id="encrypt-create">
+          <h1>Create encrypted note</h1>
           <form id="encrypt-create-form">
-            <textarea id="encrypt-create-text"></textarea>
-            <input id="encrypt-create-password" type="password" />
-            <button type="submit" id="encrypt-create-submit">Encrypt</button>
+            <div>
+              <div class="help-text">Your secret message</div>
+              <textarea
+                id="encrypt-create-text"
+                placeholder="Enter your secret message here..."
+              ></textarea>
+            </div>
+            <div>
+              <div class="help-text">Password to encrypt with</div>
+              <input
+                id="encrypt-create-password"
+                type="password"
+                placeholder="Enter a strong password..."
+              />
+            </div>
+            <button type="submit" id="encrypt-create-submit">
+              Encrypt & Create Link
+            </button>
           </form>
         </div>
         <div id="encrypt-success">
-          <input type="text" disabled id="encrypt-success-url" />
-          <button type="button" id="encrypt-success-copy">Copy</button>
+          <h1>Encrypted note created</h1>
+          <div class="help-text">
+            Share this link - the encrypted data is in the URL
+          </div>
+          <div class="success-container">
+            <input
+              type="text"
+              disabled
+              id="encrypt-success-url"
+              value="https://example.com/v1.html#v1:ABC123..."
+            />
+            <button type="button" id="encrypt-success-copy">Copy Link</button>
+          </div>
         </div>
       </div>
       <div id="decrypt">
         <div id="decrypt-locked">
+          <h1>Unlock encrypted note</h1>
           <form id="decrypt-locked-form">
-            <input id="decrypt-locked-password" type="password" />
+            <div>
+              <div class="help-text">Enter the password to decrypt</div>
+              <input
+                id="decrypt-locked-password"
+                type="password"
+                placeholder="Enter password..."
+              />
+            </div>
             <button type="submit" id="decrypt-locked-submit">Decrypt</button>
             <div id="decrypt-locked-error"></div>
           </form>
         </div>
         <div id="decrypt-unlocked">
-          <div id="decrypt-unlocked-content"></div>
+          <h1>Decrypted message</h1>
+          <div id="decrypt-unlocked-content">
+            This is where your decrypted message will appear...
+          </div>
         </div>
       </div>
     </div>
 
     <script>
-      // Derive encryption key from password
+      // ==================== STATE MACHINE ====================
+      const STATES = {
+        ENCRYPT_CREATE: "encrypt-create",
+        ENCRYPT_SUCCESS: "encrypt-success",
+        DECRYPT_LOCKED: "decrypt-locked",
+        DECRYPT_UNLOCKED: "decrypt-unlocked",
+      };
+
+      let currentState = null;
+
+      function setState(newState) {
+        // Remove active class from all sections
+        document.querySelectorAll(".active").forEach((el) => {
+          el.classList.remove("active");
+        });
+
+        currentState = newState;
+
+        // Add active class to current state elements
+        switch (newState) {
+          case STATES.ENCRYPT_CREATE:
+            document.getElementById("encrypt").classList.add("active");
+            document.getElementById("encrypt-create").classList.add("active");
+            break;
+          case STATES.ENCRYPT_SUCCESS:
+            document.getElementById("encrypt").classList.add("active");
+            document.getElementById("encrypt-success").classList.add("active");
+            break;
+          case STATES.DECRYPT_LOCKED:
+            document.getElementById("decrypt").classList.add("active");
+            document.getElementById("decrypt-locked").classList.add("active");
+            break;
+          case STATES.DECRYPT_UNLOCKED:
+            document.getElementById("decrypt").classList.add("active");
+            document.getElementById("decrypt-unlocked").classList.add("active");
+            break;
+        }
+      }
+
+      function determineInitialState() {
+        const hash = window.location.hash;
+
+        if (hash && hash.startsWith("#v1:")) {
+          return STATES.DECRYPT_LOCKED;
+        } else {
+          return STATES.ENCRYPT_CREATE;
+        }
+      }
+
+      // ==================== CRYPTO UTILITIES ====================
+      function assert(condition, message) {
+        if (!condition) {
+          throw new Error(message);
+        }
+      }
+
+      function strToArrayBuffer(str) {
+        const encoder = new TextEncoder();
+        return encoder.encode(str);
+      }
+
+      function arrayBufferToString(buffer) {
+        const decoder = new TextDecoder();
+        return decoder.decode(buffer);
+      }
+
+      function arrayBufferToBase64(buffer) {
+        return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+      }
+
+      function base64ToArrayBuffer(base64) {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+
       async function deriveKey(password, salt) {
         const passwordKey = await crypto.subtle.importKey(
           "raw",
@@ -66,7 +416,6 @@
         );
       }
 
-      // Encrypt content
       async function encrypt(text, password) {
         assert(password, "Password is required");
         assert(text, "Text is required");
@@ -84,7 +433,6 @@
             strToArrayBuffer(text),
           );
 
-          // Combine salt + iv + encrypted data
           const combined = new Uint8Array(
             salt.length + iv.length + encrypted.byteLength,
           );
@@ -102,7 +450,6 @@
         }
       }
 
-      // Decrypt content
       async function decrypt(encryptedData, password) {
         assert(password, "Password is required");
         assert(encryptedData, "Encrypted data is required");
@@ -136,45 +483,108 @@
         }
       }
 
-      function assert(condition, message) {
-        if (!condition) {
-          throw new Error(message);
+      // ==================== EVENT HANDLERS ====================
+      async function handleEncryptSubmit(e) {
+        e.preventDefault();
+
+        const text = document.getElementById("encrypt-create-text").value;
+        const password = document.getElementById("encrypt-create-password")
+          .value;
+
+        if (!text || !password) {
+          alert("Please enter both a message and a password");
+          return;
+        }
+
+        const result = await encrypt(text, password);
+
+        if (result.ok) {
+          const url = `${window.location.origin}${window.location.pathname}#v1:${result.data}`;
+          document.getElementById("encrypt-success-url").value = url;
+          // Don't navigate to the hash, just show the success state
+          setState(STATES.ENCRYPT_SUCCESS);
+        } else {
+          alert(`Encryption failed: ${result.error}`);
         }
       }
 
-      // Convert string to ArrayBuffer
-      function strToArrayBuffer(str) {
-        const encoder = new TextEncoder();
-        return encoder.encode(str);
-      }
+      async function handleDecryptSubmit(e) {
+        e.preventDefault();
 
-      // Convert ArrayBuffer to string
-      function arrayBufferToString(buffer) {
-        const decoder = new TextDecoder();
-        return decoder.decode(buffer);
-      }
+        const password = document.getElementById("decrypt-locked-password")
+          .value;
+        const hash = window.location.hash;
 
-      // Convert ArrayBuffer to base64
-      function arrayBufferToBase64(buffer) {
-        return btoa(String.fromCharCode(...new Uint8Array(buffer)));
-      }
-
-      // Convert base64 to ArrayBuffer
-      function base64ToArrayBuffer(base64) {
-        const binary = atob(base64);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) {
-          bytes[i] = binary.charCodeAt(i);
+        if (!password) {
+          document.getElementById("decrypt-locked-error").textContent =
+            "Please enter a password";
+          return;
         }
-        return bytes.buffer;
+
+        if (!hash || !hash.startsWith("#v1:")) {
+          document.getElementById("decrypt-locked-error").textContent =
+            "Invalid encrypted data in URL";
+          return;
+        }
+
+        const encryptedData = hash.substring(4); // Remove "#v1:"
+        const result = await decrypt(encryptedData, password);
+
+        if (result.ok) {
+          document.getElementById("decrypt-locked-error").textContent = "";
+          document.getElementById("decrypt-unlocked-content").textContent =
+            result.data;
+          setState(STATES.DECRYPT_UNLOCKED);
+        } else {
+          document.getElementById("decrypt-locked-error").textContent =
+            "Incorrect password or corrupted data";
+        }
       }
 
-      function hashChanged() {
-        console.log("hash changed");
+      function handleCopyClick() {
+        const urlInput = document.getElementById("encrypt-success-url");
+        urlInput.select();
+        navigator.clipboard.writeText(urlInput.value);
+
+        const button = document.getElementById("encrypt-success-copy");
+        const originalText = button.textContent;
+        button.textContent = "Copied!";
+        setTimeout(() => {
+          button.textContent = originalText;
+        }, 2000);
       }
 
-      // Initialize mode on load
-      window.addEventListener("hashchange", hashChanged);
+      function handleHashChange() {
+        const newState = determineInitialState();
+        setState(newState);
+
+        // Clear decrypt password and error when navigating back to decrypt
+        if (newState === STATES.DECRYPT_LOCKED) {
+          document.getElementById("decrypt-locked-password").value = "";
+          document.getElementById("decrypt-locked-error").textContent = "";
+        }
+      }
+
+      // ==================== INITIALIZATION ====================
+      document.addEventListener("DOMContentLoaded", () => {
+        // Wire up event listeners
+        document
+          .getElementById("encrypt-create-form")
+          .addEventListener("submit", handleEncryptSubmit);
+
+        document
+          .getElementById("decrypt-locked-form")
+          .addEventListener("submit", handleDecryptSubmit);
+
+        document
+          .getElementById("encrypt-success-copy")
+          .addEventListener("click", handleCopyClick);
+
+        window.addEventListener("hashchange", handleHashChange);
+
+        // Set initial state
+        setState(determineInitialState());
+      });
     </script>
   </body>
 </html>
